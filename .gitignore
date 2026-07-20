@@ -1,0 +1,10 @@
+# n8n
+n8n/.env
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Credentials
+credentials.json
