@@ -1,0 +1,463 @@
+{
+  "name": "Lead Capture - Webhook to Postgres",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [0, 0],
+      "id": "928fb783-283b-4c64-a7cc-d26dcaa96f10",
+      "name": "Webhook",
+      "webhookId": "c1d21ee3-dcdc-47d9-95b4-38dd2fa9ed21"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "leads",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "full_name": "={{ $json.body.fullName }}",
+            "email": "={{ $json.body.email }}",
+            "company": "={{ $json.body.company }}",
+            "country": "={{ $json.body.country }}",
+            "interest": "={{ $json.body.interest }}",
+            "message": "={{ $json.body.message }}",
+            "lead_score": "={{ $json.leadScore }} "
+          },
+          "matchingColumns": ["id"],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "full_name",
+              "displayName": "full_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "country",
+              "displayName": "country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "interest",
+              "displayName": "interest",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "lead_score",
+              "displayName": "lead_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [768, -128],
+      "id": "2ba7f0c3-c66e-426b-92cb-1a124a15f27a",
+      "name": "Insert rows in a table",
+      "credentials": {
+        "postgres": {
+          "id": "rjIlAQGrYUOPvQT6",
+          "name": "Postgres account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "8e855862-b7d2-4e4f-a674-039d31dccc9c",
+              "leftValue": "={{ $json.body.fullName }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "488d2aaf-bdbb-47c9-a8d3-3cde0ce2f632",
+              "leftValue": "={{ $json.body.email }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "ignoreCase": false
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [256, 0],
+      "id": "ef4c24e7-7347-48eb-96e5-644f5e8d9322",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [976, 80],
+      "id": "a9f77923-1e3e-452e-9ece-69118ace2890",
+      "name": "Webhook to false"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1f347e84-c7cd-4af1-b9fa-1e83a4d17599",
+              "name": "status",
+              "value": "error",
+              "type": "string"
+            },
+            {
+              "id": "b7a85629-7277-4071-8dcf-34a2868985ce",
+              "name": "message",
+              "value": "fullName and email are required",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [768, 80],
+      "id": "82209fc2-c588-4549-b216-8d6e5c3138ae",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b24b0edd-bb1d-4a80-bfae-b6d20079f49d",
+              "name": "leadScore",
+              "value": "={{ ( $json.body.company ? 20 : 0 ) + ( $json.body.interest === 'Demo' ? 20 : 0 ) + ( $json.body.country ? 10 : 0 ) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [496, -128],
+      "id": "c4fc13c8-06f0-474a-b21b-fe594f02852c",
+      "name": "leadScore"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "f63a1eaf-5d43-4155-96bf-8c534ca5c1d1",
+              "leftValue": "={{ $json.error.name }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [976, -128],
+      "id": "d043ecee-b53d-4195-9438-db9467e3d82b",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseCode": 409
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [1488, -256],
+      "id": "51f85eef-403e-41a8-bf58-0117458cdb44",
+      "name": "Response 409"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f27e0e1b-5979-430f-8030-034e812848c0",
+              "name": "status",
+              "value": "error",
+              "type": "string"
+            },
+            {
+              "id": "6088658f-4c81-4a73-90b8-1137c34b6703",
+              "name": "message",
+              "value": "email already exists",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1264, -256],
+      "id": "708fbc9c-00c8-4cd0-93d1-5be7255b484a",
+      "name": "status/message"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [1264, -64],
+      "id": "c0a02eed-6728-42c6-ae79-b83f7c7555e1",
+      "name": "Response 200"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert rows in a table": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "leadScore",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Webhook to false",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "leadScore": {
+      "main": [
+        [
+          {
+            "node": "Insert rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "status/message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Response 200",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "status/message": {
+      "main": [
+        [
+          {
+            "node": "Response 409",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "3f561b01-3261-4973-8505-84aa851aba55",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8f50f21bae4cca340f3b51f57753042a36ef6499dabfb3f98fdcc8c472583674"
+  },
+  "nodeGroups": [],
+  "id": "MuJfsR8ktMVoZ3BH",
+  "tags": [
+    {
+      "updatedAt": "2026-07-20T23:30:12.854Z",
+      "createdAt": "2026-07-20T23:30:12.854Z",
+      "id": "ZcxbH6lxmPL2Zj0e",
+      "name": "Grok"
+    }
+  ]
+}
