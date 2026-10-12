@@ -10,7 +10,10 @@
       },
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
-      "position": [0, 0],
+      "position": [
+        0,
+        0
+      ],
       "id": "928fb783-283b-4c64-a7cc-d26dcaa96f10",
       "name": "Webhook",
       "webhookId": "c1d21ee3-dcdc-47d9-95b4-38dd2fa9ed21"
@@ -39,7 +42,9 @@
             "message": "={{ $json.body.message }}",
             "lead_score": "={{ $json.leadScore }} "
           },
-          "matchingColumns": ["id"],
+          "matchingColumns": [
+            "id"
+          ],
           "schema": [
             {
               "id": "id",
@@ -149,7 +154,10 @@
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
-      "position": [768, -128],
+      "position": [
+        768,
+        -128
+      ],
       "id": "2ba7f0c3-c66e-426b-92cb-1a124a15f27a",
       "name": "Insert rows in a table",
       "credentials": {
@@ -199,7 +207,10 @@
       },
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
-      "position": [256, 0],
+      "position": [
+        256,
+        0
+      ],
       "id": "ef4c24e7-7347-48eb-96e5-644f5e8d9322",
       "name": "If"
     },
@@ -211,7 +222,10 @@
       },
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
-      "position": [976, 80],
+      "position": [
+        656,
+        96
+      ],
       "id": "a9f77923-1e3e-452e-9ece-69118ace2890",
       "name": "Webhook to false"
     },
@@ -237,7 +251,10 @@
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [768, 80],
+      "position": [
+        496,
+        96
+      ],
       "id": "82209fc2-c588-4549-b216-8d6e5c3138ae",
       "name": "Edit Fields"
     },
@@ -258,7 +275,10 @@
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [496, -128],
+      "position": [
+        496,
+        -128
+      ],
       "id": "c4fc13c8-06f0-474a-b21b-fe594f02852c",
       "name": "leadScore"
     },
@@ -289,7 +309,10 @@
       },
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
-      "position": [976, -128],
+      "position": [
+        976,
+        -128
+      ],
       "id": "d043ecee-b53d-4195-9438-db9467e3d82b",
       "name": "If1"
     },
@@ -301,7 +324,10 @@
       },
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
-      "position": [1488, -256],
+      "position": [
+        1344,
+        -224
+      ],
       "id": "51f85eef-403e-41a8-bf58-0117458cdb44",
       "name": "Response 409"
     },
@@ -327,7 +353,10 @@
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [1264, -256],
+      "position": [
+        1152,
+        -224
+      ],
       "id": "708fbc9c-00c8-4cd0-93d1-5be7255b484a",
       "name": "status/message"
     },
@@ -340,9 +369,36 @@
       },
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
-      "position": [1264, -64],
+      "position": [
+        1360,
+        -48
+      ],
       "id": "c0a02eed-6728-42c6-ae79-b83f7c7555e1",
       "name": "Response 200"
+    },
+    {
+      "parameters": {
+        "sendTo": "diego120689@gmail.com",
+        "subject": "=New lead: {{ $json.full_name }}",
+        "emailType": "text",
+        "message": "=Name: {{ $json.full_name }}\nEmail: {{ $json.email }}\nCompany: {{ $json.company }}\nScore: {{ $json.lead_score }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1152,
+        80
+      ],
+      "id": "1329f95a-2e25-4eb6-9d2e-54a86591eeba",
+      "name": "Send a message",
+      "webhookId": "922c2c6f-71b3-4116-8770-6e38392c7bb3",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "C6Mt0Jmr7ZQM9KVc",
+          "name": "Gmail account"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -420,6 +476,11 @@
         ],
         [
           {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          },
+          {
             "node": "Response 200",
             "type": "main",
             "index": 0
@@ -437,6 +498,11 @@
           }
         ]
       ]
+    },
+    "Send a message": {
+      "main": [
+        []
+      ]
     }
   },
   "active": true,
@@ -445,7 +511,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "3f561b01-3261-4973-8505-84aa851aba55",
+  "versionId": "99eef8ee-714a-4f9a-8daf-80371d2e3e46",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "8f50f21bae4cca340f3b51f57753042a36ef6499dabfb3f98fdcc8c472583674"

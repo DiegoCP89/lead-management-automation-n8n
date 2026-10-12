@@ -86,8 +86,14 @@ PowerShell 5.1: `Invoke-WebRequest` throws on 4xx. Read the body from `$_.ErrorD
 
 `workflows/lead-capture-webhook-to-postgres.json`
 
+## Email notification
+
+On HTTP 200 only, the workflow sends an email with the lead name, email, company, and score. The Gmail node runs in parallel with Respond 200, so the API still returns the inserted row.
+
+The export stores the Gmail credential name only. After import, create your own Gmail OAuth credential in n8n and attach it to the Gmail node. Do not commit client secrets or tokens.
+
 ## Status
 
-Done: validation, persistence, lead score, duplicate-email handling (HTTP 409).
+Done: validation (400), persistence, lead score, duplicate email (409), email notification on success.
 
-Next: email notification for new leads.
+This completes the planned portfolio scope.
