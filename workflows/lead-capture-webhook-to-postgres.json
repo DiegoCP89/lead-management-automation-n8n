@@ -35,7 +35,7 @@
           "mappingMode": "defineBelow",
           "value": {
             "full_name": "={{ $json.body.fullName }}",
-            "email": "={{ $json.body.email }}",
+            "email": "={{ $json.body.email.toLowerCase().trim() }}",
             "company": "={{ $json.body.company }}",
             "country": "={{ $json.body.country }}",
             "interest": "={{ $json.body.interest }}",
@@ -293,13 +293,12 @@
           },
           "conditions": [
             {
-              "id": "f63a1eaf-5d43-4155-96bf-8c534ca5c1d1",
-              "leftValue": "={{ $json.error.name }}",
-              "rightValue": "",
+              "id": "46d09fc6-3ca3-4bce-b7d8-b7cb08ef8cfe",
+              "leftValue": "={{ $json.message }}",
+              "rightValue": "duplicate key",
               "operator": {
                 "type": "string",
-                "operation": "notEmpty",
-                "singleValue": true
+                "operation": "contains"
               }
             }
           ],
@@ -371,14 +370,14 @@
       "typeVersion": 1.5,
       "position": [
         1360,
-        -48
+        256
       ],
       "id": "c0a02eed-6728-42c6-ae79-b83f7c7555e1",
       "name": "Response 200"
     },
     {
       "parameters": {
-        "sendTo": "diego120689@gmail.com",
+        "sendTo": "sales@example.com",
         "subject": "=New lead: {{ $json.full_name }}",
         "emailType": "text",
         "message": "=Name: {{ $json.full_name }}\nEmail: {{ $json.email }}\nCompany: {{ $json.company }}\nScore: {{ $json.lead_score }}",
@@ -387,7 +386,7 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.2,
       "position": [
-        1152,
+        1360,
         80
       ],
       "id": "1329f95a-2e25-4eb6-9d2e-54a86591eeba",
@@ -399,6 +398,84 @@
           "name": "Gmail account"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "82773d31-5833-4b8f-a19b-d428ae6ad292",
+              "leftValue": "={{ $json.error.name }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1152,
+        32
+      ],
+      "id": "a697359a-6b94-49d1-b780-a7debc17c71d",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseCode": 500
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1568,
+        -64
+      ],
+      "id": "f74d620e-de62-4221-b4dd-be68c40383ca",
+      "name": "Respond 500"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f189c7d6-4b60-48ff-8641-75fcd098e8d9",
+              "name": "status",
+              "value": "=error",
+              "type": "string"
+            },
+            {
+              "id": "5a4168a5-6702-4b49-b511-7d3200ec04ee",
+              "name": "message",
+              "value": "=could not save lead",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1360,
+        -64
+      ],
+      "id": "b7a6ad61-e87b-4b8f-b990-db1ece0b7d7b",
+      "name": "Error message"
     }
   ],
   "pinData": {},
@@ -476,12 +553,7 @@
         ],
         [
           {
-            "node": "Send a message",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Response 200",
+            "node": "If2",
             "type": "main",
             "index": 0
           }
@@ -503,6 +575,40 @@
       "main": [
         []
       ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Error message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Response 200",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error message": {
+      "main": [
+        [
+          {
+            "node": "Respond 500",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
@@ -511,7 +617,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "99eef8ee-714a-4f9a-8daf-80371d2e3e46",
+  "versionId": "ee73995f-bba5-49f3-818d-6f47cfa2473a",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "8f50f21bae4cca340f3b51f57753042a36ef6499dabfb3f98fdcc8c472583674"
