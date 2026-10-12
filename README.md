@@ -104,3 +104,7 @@ This is a local portfolio lab, not a production deploy. The webhook has no authe
 Done: validation (400), persistence, lead score, duplicate email (409), other database errors (500), email notification on success, lowercase email.
 
 This completes the planned portfolio scope.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
